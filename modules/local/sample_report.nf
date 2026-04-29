@@ -9,8 +9,10 @@ process SAMPLE_REPORT {
     label 'process_low'
     publishDir "${params.outdir}/reports", mode: params.publish_dir_mode
 
-    // Plain python from Docker Hub - stdlib only, no extra deps needed
-    container 'docker.io/library/python:3.11-slim'
+    // Plain python from Docker Hub - stdlib only, no extra deps needed.
+    // NB: do NOT use the *-slim variant - it strips `procps`/`ps`, which Nextflow
+    // shells out to for per-task metric collection.
+    container 'docker.io/library/python:3.11'
 
     input:
         tuple val(meta), path('inputs/*')

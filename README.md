@@ -28,8 +28,8 @@ collection; this pipeline is intentionally simpler — one BAM per
 
 ```bash
 # 1.  Get the code
-git clone https://github.com/<your-org>/pb-hifi-mapping-nf.git
-cd pb-hifi-mapping-nf
+git clone https://github.com/connor122721/nf_microbe_mapper.git
+cd nf_microbe_mapper
 
 # 2.  Edit the samplesheet
 cp assets/samplesheet.csv my_samples.csv
@@ -39,20 +39,10 @@ $EDITOR my_samples.csv
 nextflow run main.nf \
     --samplesheet my_samples.csv \
     --references  'refs/*.fasta.gz' \
-    --kraken2_db  /scratch/c0murr09/kraken2/k2_pluspf_20240605 \
-    --outdir      results \
-    -profile      slurm,singularity
+    --kraken2_db  /work/c0murr09/kraken2/k2_pluspf_20240605 \
+    --outdir      ./results \
+    -profile      slurm,apptainer
 ```
-
-On a workstation with Docker:
-
-```bash
-nextflow run main.nf \
-    --samplesheet my_samples.csv \
-    --references  ref1.fa,ref2.fa \
-    -profile      local,docker
-```
-
 ---
 
 ## Inputs
@@ -142,7 +132,7 @@ results/
 | `--references`          | _required_ | Glob or comma list of FASTAs |
 | `--kraken2_db`          | `null` | Kraken2 DB directory (skips taxonomy if unset) |
 | `--run_bracken`         | `true` | Run Bracken on Kraken2 reports |
-| `--bracken_read_length` | `10000` | HiFi-typical read length for Bracken |
+| `--bracken_read_length` | `300` | HiFi-typical read length for Bracken |
 | `--bracken_level`       | `S` | Tax level (D/P/C/O/F/G/S) |
 | `--bracken_threshold`   | `10` | Min reads per taxon |
 | `--minimap2_preset`     | `map-hifi` | Minimap2 `-ax` preset |
@@ -170,7 +160,7 @@ Override any of them with the matching `--<tool>_container <image>` parameter
 | `test`          | Tiny smoke-test config (see `conf/test.config`) |
 | `debug`         | Disable cleanup, dump task hashes |
 
-Combine profiles with commas: `-profile slurm,singularity`.
+Combine profiles with commas: `-profile slurm,apptainer`.
 
 ---
 
