@@ -1,0 +1,39 @@
+# Nextflow
+work/
+.nextflow*
+.nextflow/
+*.log
+results/
+output/
+test_results/
+
+# OS / editor
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Containers (large)
+*.sif
+*.simg
+*.img
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+
+# Reference / DB caches (large)
+*.mmi
+*.fai
+*.dict
+kraken2_db/
+bracken_db/
+
+# Pipeline reports (re-generated each run)
+output/pipeline_info/

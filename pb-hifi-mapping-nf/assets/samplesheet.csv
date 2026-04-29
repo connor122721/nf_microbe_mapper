@@ -1,0 +1,3 @@
+sample,fastq
+sample01,/absolute/path/to/sample01.hifi_reads.fastq.gz
+sample02,/absolute/path/to/sample02.hifi_reads.fastq.gz
