@@ -2,7 +2,7 @@
 
 A small, robust [Nextflow](https://www.nextflow.io/) DSL2 pipeline for mapping
 PacBio HiFi reads against one or more reference genomes in parallel, with
-read-level QC and a lightweight taxonomic profile per sample.
+read-level QC and a taxonomic profile per sample.
 
 ```
    samplesheet.csv   ──┐
@@ -33,15 +33,15 @@ cd nf_microbe_mapper
 
 # 2.  Edit the samplesheet
 cp assets/samplesheet.csv my_samples.csv
-$EDITOR my_samples.csv
+nano my_samples.csv
 
 # 3.  Run on the zurada HPC
 nextflow run main.nf \
     --samplesheet my_samples.csv \
-    --references  'refs/*.fasta.gz' \
+    --references 'refs/*.fasta.gz' \
     --kraken2_db  /work/c0murr09/kraken2/k2_pluspf_20240605 \
-    --outdir      ./results \
-    -profile      slurm,apptainer
+    --outdir ./results \
+    -profile slurm,apptainer
 ```
 ---
 
@@ -166,8 +166,7 @@ Combine profiles with commas: `-profile slurm,apptainer`.
 
 ## Containers
 
-All containers are pulled from public registries — no local image builds
-required.  Defaults (set in each module):
+All containers are pulled from public registries.  Defaults (set in each module):
 
 | Tool | Image |
 |---|---|
@@ -208,27 +207,11 @@ and ships with the Bracken `.kmer_distrib` files.
 
 ```bash
 mkdir -p k2_pluspf && cd k2_pluspf
-wget https://genome-idx.s3.amazonaws.com/kraken/k2_pluspf_20240605.tar.gz
-tar -xzvf k2_pluspf_20240605.tar.gz
+wget https://genome-idx.s3.amazonaws.com/kraken/k2_standard_08_GB_20260226.tar.gz
+tar -xzvf k2_standard_08_GB_20260226.tar.gz
 # point the pipeline at this directory:
 nextflow run ... --kraken2_db $PWD
 ```
-
-A smaller `Standard-8` DB is also available (~7 GB) for laptops.
-
----
-
-## Troubleshooting
-
-* **`ERROR: no FASTA files matched --references ...`** — the glob did not match
-  any files with a recognized extension.  Try quoting the glob and checking
-  `ls` from the same shell.
-* **Singularity pull failures on offline nodes** — pre-pull on a login node:
-  `singularity pull docker://quay.io/biocontainers/minimap2:2.28--he4a0461_0`.
-* **Kraken2 OOM** — the DB sizes assume ~80 GB RAM.  For smaller DBs lower
-  `withName: 'KRAKEN2' { memory = ... }` in `conf/base.config`.
-* **Mapping fan-out too aggressive** — adjust `withName: 'MINIMAP2_MAP' { maxForks = N }`
-  in `conf/base.config`.
 
 ---
 
